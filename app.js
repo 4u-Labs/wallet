@@ -1030,64 +1030,61 @@ const App = (function () {
         // Sort tokens by value
         const sortedTokens = TokensModule.sortTokensByValue(state.tokenBalances);
 
-        // Filter tokens with balance (or show all with option to hide zero balances)
+        // Se houver tokens com saldo, exibe-os; se não houver saldo em nenhum, exibe todos os tokens rastreados
         const tokensWithBalance = sortedTokens.filter(t => t.hasBalance);
+        const tokensToDisplay = tokensWithBalance.length > 0 ? tokensWithBalance : sortedTokens;
 
-        if (tokensWithBalance.length === 0) {
+        if (tokensToDisplay.length === 0) {
             tokenList.innerHTML = `
-                <div class="p-8 text-center">
-                    <div class="w-16 h-16 bg-dark-700 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-8 h-8 text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4"/>
-                        </svg>
-                    </div>
-                    <p class="text-dark-400">Nenhum token encontrado</p>
-                    <p class="text-dark-500 text-xs mt-1">Tokens aparecerão aqui quando você tiver saldo</p>
+                <div class="p-6 text-center">
+                    <p class="text-slate-400 text-xs font-medium">Nenhum ativo rastreado nesta rede.</p>
                 </div>
             `;
             return;
         }
 
-        tokenList.innerHTML = tokensWithBalance.map(token => {
+        tokenList.innerHTML = tokensToDisplay.map(token => {
             const safeSymbol = escapeHtml(token.symbol);
             const safeName = escapeHtml(token.name);
             const safeIcon = escapeHtml(token.icon || token.symbol.charAt(0));
             const safeColor = escapeHtml(token.color || '#6366f1');
-            const valueFormatted = token.valueUsd > 0 ? `$${token.valueUsd.toFixed(2)}` : '-';
+            const valueFormatted = token.valueUsd > 0 ? `$${token.valueUsd.toFixed(2)}` : '$0.00';
+            const balanceNum = parseFloat(token.balance || 0);
 
             // Verification badge
             let verificationBadge = '';
             if (token.verified) {
                 verificationBadge = `
-                    <span class="ml-1 inline-flex items-center" title="Token verificado">
-                        <svg class="w-3.5 h-3.5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <span class="ml-1.5 inline-flex items-center" title="Token Verificado">
+                        <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
                     </span>
                 `;
             } else if (token.isCustom) {
                 verificationBadge = `
-                    <span class="ml-1 inline-flex items-center" title="Token não verificado">
-                        <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                        </svg>
-                    </span>
+                    <span class="ml-1.5 inline-flex items-center text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono" title="Custom Token">Custom</span>
                 `;
             }
 
             return `
-                <div class="p-4 flex items-center gap-3 hover:bg-dark-700/50 transition-colors cursor-pointer" onclick="App.showSendScreen('${safeSymbol}')">
-                    <div class="relative w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg"
-                         style="background-color: ${safeColor}20; color: ${safeColor}; border: 1px solid ${safeColor}40;">
-                        ${safeIcon}
+                <div class="token-item-row group" onclick="App.showSendScreen('${safeSymbol}')">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="token-badge-icon shadow-sm group-hover:scale-105 transition-transform"
+                             style="background: linear-gradient(135deg, ${safeColor}35, ${safeColor}15); color: ${safeColor}; border: 1px solid ${safeColor}50;">
+                            ${safeIcon}
+                        </div>
+                        <div class="min-w-0">
+                            <div class="flex items-center text-sm font-bold text-white">
+                                <span class="truncate">${safeSymbol}</span>
+                                ${verificationBadge}
+                            </div>
+                            <p class="text-[11px] text-slate-400 font-medium truncate">${safeName}</p>
+                        </div>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-semibold flex items-center">${safeSymbol}${verificationBadge}</p>
-                        <p class="text-xs text-dark-400">${safeName}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="font-semibold">${parseFloat(token.balance).toFixed(6)}</p>
-                        <p class="text-xs text-dark-400">${valueFormatted}</p>
+                    <div class="text-right flex-shrink-0 pl-3">
+                        <p class="font-bold text-sm text-white font-mono">${balanceNum.toFixed(4)}</p>
+                        <p class="text-[11px] text-slate-400 font-medium">${valueFormatted}</p>
                     </div>
                 </div>
             `;
