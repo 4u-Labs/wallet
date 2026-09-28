@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="no-referrer">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="SecureON Wallet — Carteira cripto não-custodial Ethereum & ERC-20 com criptografia local AES-256-GCM. 100% no seu navegador.">
+    
+    <title>SecureON Wallet — Carteira Cripto Não-Custodial | 4U.IA.BR</title>
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <!-- PWA Manifest & Theme -->
+    <link rel="manifest" href="manifest.json?v=2.0.0">
+    <meta name="theme-color" content="#080b14">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SecureON">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Local Libraries & Styles -->
+    <link rel="stylesheet" href="tailwind_compiled.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Ambient 4U Cyberpunk Lighting */
+        body {
+            background-color: #060810;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.10) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 60%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .ambient-grid {
+            position: fixed;
+            inset: 0;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wallet-frame {
+            position: relative;
+            z-index: 10;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+        }
+
+        @media (min-width: 640px) {
+            .wallet-frame {
+                min-height: 860px;
+                height: 88vh;
+                margin-top: 3vh;
+                margin-bottom: 3vh;
+                border-radius: 32px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                overflow: hidden;
+            }
+        }
+
+        /* 4U Top Header Nav */
+        .top-nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            background: rgba(8, 11, 20, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 11px;
+            z-index: 30;
+        }
+
+        .top-nav-bar a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+
+        .top-nav-bar a:hover {
+            color: #a5b4fc;
+        }
+    </style>
+</head>
+
+<body class="bg-dark-950 text-white font-sans selection:bg-primary-500/30">
+    <div class="ambient-grid"></div>
+
+    <!-- Security Error Screen -->
+    <div id="security-error-screen"
+        class="fixed inset-0 bg-gradient-to-br from-red-950 to-dark-950 flex items-center justify-center z-[100] hidden">
+        <div class="text-center p-8 max-w-md animate-fade-in bg-dark-900/90 border border-red-500/30 rounded-3xl shadow-2xl backdrop-blur-xl">
+            <div class="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold mb-3 text-white">Verificação de Segurança</h1>
+            <p id="security-error-message" class="text-red-300 text-sm mb-4">Uma checagem de integridade do ambiente Web3 falhou.</p>
+            <div id="security-error-details"
+                class="bg-red-950/60 border border-red-500/30 rounded-2xl p-4 text-left text-xs text-red-200 mb-6 font-mono"></div>
+            <button id="btn-security-reload"
+                class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-lg shadow-red-500/20">
+                Recarregar Aplicação
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-dark-950 flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="relative w-20 h-20 mx-auto mb-6">
+                <div class="absolute inset-0 rounded-full border-4 border-primary-500/20"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-primary-500 border-t-transparent animate-spin"></div>
+                <div class="absolute inset-2 rounded-full bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center shadow-lg shadow-primary-500/30">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+            </div>
+            <p class="text-dark-300 font-medium text-sm" id="loading-message">Iniciando ambiente seguro...</p>
+            <p class="text-dark-500 text-xs mt-2 font-mono">4U.IA.BR • Zero-Knowledge</p>
+        </div>
+    </div>
+
+    <!-- Session Timeout Warning -->
+    <div id="session-timeout-warning"
+        class="fixed top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-2xl shadow-2xl z-50 hidden animate-slide-down">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-semibold text-xs">Sessão expira em breve por inatividade</p>
+                <p id="timeout-countdown" class="text-[11px] text-amber-100">Movimente o cursor ou toque na tela para continuar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Wallet Card Frame -->
+    <div class="wallet-frame">
+        <!-- Top Institutional Nav -->
+        <div class="top-nav-bar">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+                <span class="font-bold tracking-tight text-white">SecureON <span class="text-indigo-400">Web3</span></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="landing.html" title="Apresentação">Recursos</a>
+                <a href="tutorial.html" target="_blank" title="Tutorial Completo">Tutorial</a>
+                <a href="suporte.html" title="Ajuda & FAQ">Suporte</a>
+                <a href="https://github.com/4u-Labs/wallet" target="_blank" title="Código Aberto no GitHub" class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Container #app -->
+        <div id="app" class="hidden flex-1 flex flex-col relative overflow-hidden">
+            <!-- Welcome Screen (No Wallet) -->
+            <div id="welcome-screen" class="hidden h-full flex flex-col justify-between p-6 overflow-y-auto">
+                <div class="my-auto animate-fade-in-up text-center">
+                    <!-- Logo Shield -->
+                    <div class="relative w-24 h-24 mx-auto mb-6">
+                        <div class="absolute -inset-2 bg-gradient-to-r from-primary-500 to-cyan-500 rounded-3xl blur-lg opacity-40 animate-pulse"></div>
+                        <div class="relative w-24 h-24 bg-gradient-to-br from-primary-500 via-primary-600 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl border border-white/20">
+                            <svg class="w-13 h-13 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h1 class="text-3xl font-extrabold text-center mb-2 tracking-tight">
+                        SecureON <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Wallet</span>
+                    </h1>
+                    <p class="text-dark-400 text-center mb-8 text-sm">Sua carteira Ethereum & Web3 não-custodial</p>
+
+                    <!-- Security Badges -->
+                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                        <span class="inline-flex items-center gap-1.5 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/30 text-[11px] font-semibold text-green-300">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                            Não-Custodial
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/30 text-[11px] font-semibold text-blue-300">
+                            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                            AES-256-GCM
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/30 text-[11px] font-semibold text-purple-300">
+                            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                            PBKDF2 100k
+                        </span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="space-y-3 w-full max-w-sm mx-auto">
+                        <button id="btn-create-wallet"
+                            class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all transform hover:scale-[1.02] shadow-xl shadow-primary-500/25 flex items-center justify-center gap-2 text-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Criar Nova Carteira
+                        </button>
+                        <button id="btn-import-wallet"
+                            class="w-full bg-dark-800/80 hover:bg-dark-700 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all border border-dark-700 hover:border-dark-600 flex items-center justify-center gap-2 text-sm">
+                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                            Importar Carteira (Seed)
+                        </button>
+                        <button id="btn-import-backup"
+                            class="w-full bg-dark-900/60 hover:bg-dark-800 text-dark-300 font-medium py-3 px-6 rounded-2xl transition-all border border-dark-800 flex items-center justify-center gap-2 text-xs">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Restaurar Backup (JSON)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pt-6 text-center border-t border-white/5">
+                    <p class="text-dark-500 text-xs font-mono">Suas chaves, suas moedas. 100% no seu navegador.</p>
+                </div>
+            </div>
+
+            <!-- Create Wallet Screen -->
+            <div id="create-wallet-screen" class="hidden h-full flex flex-col">
+                <header class="p-4 flex items-center gap-3 border-b border-white/5">
+                    <button id="btn-back-create"
+                        class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all text-dark-300 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 class="text-base font-semibold">Nova Carteira Ethereum</h1>
+                </header>
+
+                <div class="flex-1 p-5 overflow-y-auto">
+                    <div class="animate-fade-in space-y-5">
+                        <!-- Warning Card -->
+                        <div class="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-2xl p-4">
+                            <div class="flex gap-3">
+                                <div class="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-amber-400 font-semibold text-sm mb-1">Guarde sua Seed Phrase!</h3>
+                                    <p class="text-amber-200/80 text-xs leading-relaxed">Anote estas 12 palavras em papel físico. Nunca compartilhe ou salve em prints ou nuvens desprotegidas.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seed Phrase Grid -->
+                        <div class="bg-dark-850 rounded-2xl p-4 border border-dark-700">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs text-dark-400 font-medium">Sua Seed Phrase (BIP-39)</span>
+                                <span class="text-[11px] text-dark-500 font-mono">12 palavras</span>
+                            </div>
+                            <div id="seed-words" class="grid grid-cols-3 gap-2"></div>
+                        </div>
+
+                        <!-- Password Fields -->
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-dark-300 mb-1.5">Senha de desbloqueio local</label>
+                                <input type="password" id="create-password"
+                                    class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                                    placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                                <div id="password-strength" class="mt-1.5 text-xs"></div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-dark-300 mb-1.5">Confirmar senha</label>
+                                <input type="password" id="create-password-confirm"
+                                    class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                                    placeholder="Repita a senha" autocomplete="new-password">
+                            </div>
+                        </div>
+
+                        <!-- Checkbox -->
+                        <label class="flex items-start gap-3 cursor-pointer group">
+                            <div class="relative mt-0.5">
+                                <input type="checkbox" id="confirm-saved" class="sr-only peer">
+                                <div class="w-5 h-5 bg-dark-700 border border-dark-600 rounded-md peer-checked:bg-primary-500 peer-checked:border-primary-500 transition-all"></div>
+                                <svg class="w-3 h-3 text-white absolute top-1 left-1 hidden peer-checked:block" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <span class="text-xs text-dark-300 group-hover:text-dark-200 transition-colors leading-relaxed">
+                                Eu anotei minha seed phrase em local seguro e compreendo que a 4U.IA.BR não pode recuperar meus fundos caso eu perca essas palavras.
+                            </span>
+                        </label>
+
+                        <button id="btn-confirm-create"
+                            class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] disabled:hover:scale-100 text-sm shadow-lg shadow-primary-500/20"
+                            disabled>
+                            Finalizar e Criar Carteira
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import Wallet Screen -->
+            <div id="import-wallet-screen" class="hidden h-full flex flex-col">
+                <header class="p-4 flex items-center gap-3 border-b border-white/5">
+                    <button id="btn-back-import"
+                        class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all text-dark-300 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 class="text-base font-semibold">Importar Carteira (Seed)</h1>
+                </header>
+
+                <div class="flex-1 p-5 overflow-y-auto">
+                    <div class="animate-fade-in space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-dark-300 mb-1.5">Seed Phrase (12 ou 24 palavras)</label>
+                            <textarea id="import-seed"
+                                class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 h-28 resize-none transition-all font-mono text-xs leading-relaxed"
+                                placeholder="Digite as 12 palavras separadas por espaço (ex: apple banana orange...)" autocomplete="off" spellcheck="false"></textarea>
+                            <p id="import-seed-error" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-dark-300 mb-1.5">Nova Senha de Criptografia</label>
+                                <input type="password" id="import-password"
+                                    class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                                    placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-dark-300 mb-1.5">Confirmar Nova Senha</label>
+                                <input type="password" id="import-password-confirm"
+                                    class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                                    placeholder="Repita a senha" autocomplete="new-password">
+                            </div>
+                        </div>
+
+                        <button id="btn-confirm-import"
+                            class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all transform hover:scale-[1.02] text-sm shadow-lg shadow-primary-500/20">
+                            Restaurar Carteira
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Screen (Locked Wallet) -->
+            <div id="login-screen" class="hidden h-full flex flex-col justify-between p-6">
+                <div class="my-auto animate-fade-in-up text-center w-full max-w-sm mx-auto">
+                    <!-- Shield Icon with Glow -->
+                    <div class="relative w-20 h-20 mx-auto mb-5">
+                        <div class="absolute -inset-2 bg-primary-500/30 rounded-2xl blur-lg animate-pulse"></div>
+                        <div class="relative w-20 h-20 bg-gradient-to-br from-primary-500 via-primary-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-xl border border-white/20">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h1 class="text-2xl font-bold mb-1">SecureON</h1>
+                    <p class="text-dark-400 text-xs mb-6">Cofre de Ativos Criptografado</p>
+
+                    <div class="mb-5 text-left">
+                        <label class="block text-xs font-medium text-dark-300 mb-1.5">Senha Mestra</label>
+                        <input type="password" id="login-password"
+                            class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                            placeholder="Digite sua senha" autocomplete="current-password">
+                        <p id="login-error" class="text-red-400 text-xs mt-2 hidden"></p>
+                        <p id="login-attempts" class="text-amber-400 text-xs mt-2 hidden"></p>
+                    </div>
+
+                    <button id="btn-unlock"
+                        class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all transform hover:scale-[1.02] shadow-xl shadow-primary-500/25 flex items-center justify-center gap-2 text-sm mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                        </svg>
+                        Desbloquear Carteira
+                    </button>
+
+                    <button id="btn-reset-wallet"
+                        class="text-xs text-dark-400 hover:text-red-400 transition-colors py-1">
+                        Esqueceu a senha? Resetar carteira com Seed
+                    </button>
+                </div>
+
+                <div class="text-center pt-4 border-t border-white/5">
+                    <span class="text-[11px] text-dark-500">AES-256-GCM • Zero-Knowledge Architecture</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Screen -->
+            <div id="dashboard-screen" class="hidden h-full flex flex-col">
+                <!-- Header -->
+                <header class="p-4 flex items-center justify-between border-b border-white/5 bg-dark-900/60 backdrop-blur-md">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-gradient-to-br from-primary-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="font-bold text-sm leading-tight">SecureON</h1>
+                            <div id="network-indicator" class="flex items-center gap-1.5">
+                                <span id="network-status-dot" class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                <span id="network-name" class="text-[11px] text-dark-400 font-medium">Mainnet</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button id="btn-lock"
+                            class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all text-dark-400 hover:text-white"
+                            title="Bloquear Carteira">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="flex-1 p-4 overflow-y-auto space-y-4">
+                    <!-- Balance Card -->
+                    <div class="bg-gradient-to-br from-primary-600 via-indigo-700 to-purple-800 rounded-3xl p-5 relative overflow-hidden shadow-2xl border border-white/10 animate-fade-in">
+                        <div class="relative z-10">
+                            <div class="flex items-start justify-between mb-3">
+                                <div>
+                                    <p class="text-primary-200 text-xs font-medium mb-1">Saldo Principal</p>
+                                    <h2 id="balance-display" class="text-3xl font-extrabold tracking-tight">0.0000 ETH</h2>
+                                    <p id="balance-usd" class="text-primary-200 text-sm mt-0.5">≈ $0.00 USD</p>
+                                </div>
+                                <button id="btn-refresh-balance"
+                                    class="w-9 h-9 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center transition-all text-white"
+                                    title="Atualizar Saldo">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Address Box -->
+                            <div class="bg-black/30 backdrop-blur-md rounded-2xl p-3 border border-white/10">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex-1 min-w-0 pr-2">
+                                        <p class="text-primary-200 text-[10px] uppercase font-semibold mb-0.5 tracking-wider">Endereço Público</p>
+                                        <code id="address-display" class="text-white text-xs font-mono truncate block"></code>
+                                    </div>
+                                    <button id="btn-copy-address"
+                                        class="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-all flex-shrink-0 text-white"
+                                        title="Copiar Endereço">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <button id="btn-send"
+                            class="bg-dark-800 hover:bg-dark-750 p-3 rounded-2xl text-center transition-all border border-dark-700 hover:border-red-500/40 group">
+                            <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform shadow-md shadow-red-500/20">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                                </svg>
+                            </div>
+                            <span class="text-xs font-semibold text-dark-200">Enviar</span>
+                        </button>
+                        <button id="btn-receive"
+                            class="bg-dark-800 hover:bg-dark-750 p-3 rounded-2xl text-center transition-all border border-dark-700 hover:border-green-500/40 group">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform shadow-md shadow-green-500/20">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6" />
+                                </svg>
+                            </div>
+                            <span class="text-xs font-semibold text-dark-200">Receber</span>
+                        </button>
+                        <button id="btn-settings"
+                            class="bg-dark-800 hover:bg-dark-750 p-3 rounded-2xl text-center transition-all border border-dark-700 hover:border-indigo-500/40 group">
+                            <div class="w-10 h-10 bg-gradient-to-br from-dark-600 to-dark-700 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform">
+                                <svg class="w-5 h-5 text-dark-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <span class="text-xs font-semibold text-dark-200">Ajustes</span>
+                        </button>
+                    </div>
+
+                    <!-- Token List -->
+                    <div class="bg-dark-850 rounded-2xl border border-dark-700/80 overflow-hidden">
+                        <div class="flex items-center justify-between p-3.5 border-b border-dark-700/80 bg-dark-900/40">
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-dark-300">Ativos & Tokens</h3>
+                            <button id="btn-refresh-tokens"
+                                class="text-primary-400 hover:text-primary-300 text-xs font-medium flex items-center gap-1 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Atualizar
+                            </button>
+                        </div>
+                        <div id="token-list" class="divide-y divide-dark-700/60 max-h-72 overflow-y-auto">
+                            <div class="p-6 text-center text-dark-400 text-xs">Carregando tokens...</div>
+                        </div>
+                    </div>
+
+                    <!-- Transaction History -->
+                    <div class="bg-dark-850 rounded-2xl border border-dark-700/80 overflow-hidden">
+                        <div class="flex items-center justify-between p-3.5 border-b border-dark-700/80 bg-dark-900/40">
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-dark-300">Histórico de Transações</h3>
+                            <button id="btn-refresh-history"
+                                class="text-primary-400 hover:text-primary-300 text-xs font-medium flex items-center gap-1 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Atualizar
+                            </button>
+                        </div>
+                        <div id="transaction-list" class="divide-y divide-dark-700/60 max-h-48 overflow-y-auto">
+                            <div class="p-6 text-center text-dark-400 text-xs">Nenhuma transação recente encontrada</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Send Screen -->
+            <div id="send-screen" class="hidden h-full flex flex-col">
+                <header class="p-4 flex items-center gap-3 border-b border-white/5 bg-dark-900/60">
+                    <button id="btn-back-send"
+                        class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all text-dark-300 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 id="send-screen-title" class="text-base font-semibold">Enviar Ativo</h1>
+                </header>
+
+                <div class="flex-1 p-5 overflow-y-auto">
+                    <div class="animate-fade-in space-y-4">
+                        <!-- Token Selector -->
+                        <div>
+                            <label class="block text-xs font-medium text-dark-300 mb-1.5">Ativo Selecionado</label>
+                            <div id="token-selector"
+                                class="bg-dark-800 border border-dark-700 rounded-2xl p-3 cursor-pointer hover:border-dark-600 transition-all">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div id="selected-token-icon"
+                                            class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                                            ⟠
+                                        </div>
+                                        <div>
+                                            <p id="selected-token-symbol" class="font-bold text-sm">ETH</p>
+                                            <p id="selected-token-balance" class="text-xs text-dark-400">Saldo: 0.0000</p>
+                                        </div>
+                                    </div>
+                                    <svg class="w-4 h-4 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recipient Address -->
+                        <div>
+                            <label class="block text-xs font-medium text-dark-300 mb-1.5">Endereço de Destino (0x...)</label>
+                            <input type="text" id="send-to"
+                                class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 font-mono text-xs transition-all"
+                                placeholder="0x..." autocomplete="off" spellcheck="false">
+                            <p id="send-to-error" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                            <div id="address-tamper-warning"
+                                class="bg-red-900/50 border border-red-500 rounded-xl p-3 mt-2 hidden animate-shake">
+                                <p class="text-red-400 text-xs font-bold flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    ALERTA: Modificação de endereço detectada!
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Amount -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="text-xs font-medium text-dark-300">Quantidade</label>
+                                <p id="available-balance" class="text-dark-400 text-xs"></p>
+                            </div>
+                            <div class="relative">
+                                <input type="text" inputmode="decimal" id="send-amount"
+                                    class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 pr-20 text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-base font-bold transition-all"
+                                    placeholder="0.0" autocomplete="off">
+                                <button id="btn-max-amount"
+                                    class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-primary-500/20 hover:bg-primary-500/30 text-primary-400 text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all">
+                                    MÁX
+                                </button>
+                            </div>
+                            <p id="send-amount-error" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                        </div>
+
+                        <!-- Gas Estimate -->
+                        <div class="bg-dark-850 rounded-2xl p-4 border border-dark-700/80">
+                            <div class="flex justify-between text-xs mb-2">
+                                <span class="text-dark-400">Taxa de Rede Estimada (Gas)</span>
+                                <span id="gas-estimate" class="text-white font-mono font-medium">~0.0000 ETH</span>
+                            </div>
+                            <div class="flex justify-between text-sm pt-2.5 border-t border-dark-700/80">
+                                <span class="text-dark-300 font-semibold">Total Debitável</span>
+                                <span id="total-amount" class="text-cyan-400 font-bold font-mono">0.0000 ETH</span>
+                            </div>
+                        </div>
+
+                        <button id="btn-continue-send"
+                            class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] disabled:hover:scale-100 text-sm shadow-lg shadow-primary-500/20"
+                            disabled>
+                            Revisar e Continuar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirm Send Screen -->
+            <div id="confirm-send-screen" class="hidden h-full flex flex-col">
+                <header class="p-4 flex items-center gap-3 border-b border-white/5 bg-dark-900/60">
+                    <button id="btn-cancel-send"
+                        class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all text-dark-300 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 class="text-base font-semibold">Assinar Transação</h1>
+                </header>
+
+                <div class="flex-1 p-5 overflow-y-auto">
+                    <div class="animate-fade-in space-y-4">
+                        <!-- Irreversible Alert -->
+                        <div class="bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-2xl p-3.5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 bg-red-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                                <p class="text-red-200 text-xs">Verifique todos os dados. Transações na blockchain são <strong>irreversíveis</strong>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Details -->
+                        <div class="space-y-2.5">
+                            <div class="bg-dark-850 rounded-xl p-3.5 border border-dark-700">
+                                <p class="text-dark-400 text-[11px] mb-1 uppercase font-semibold">Destinatário</p>
+                                <div id="confirm-to-enhanced" class="font-mono text-xs break-all leading-relaxed text-indigo-300"></div>
+                                <p id="confirm-to" class="text-white font-mono text-xs break-all hidden"></p>
+                            </div>
+
+                            <div class="bg-dark-850 rounded-xl p-3.5 border border-dark-700">
+                                <p class="text-dark-400 text-[11px] mb-0.5 uppercase font-semibold">Valor</p>
+                                <p id="confirm-amount" class="text-white text-xl font-bold font-mono"></p>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div class="bg-dark-850 rounded-xl p-3 border border-dark-700">
+                                    <p class="text-dark-400 text-[11px] mb-0.5">Taxa Gas</p>
+                                    <p id="confirm-gas" class="text-white text-xs font-mono font-medium"></p>
+                                </div>
+                                <div class="bg-dark-850 rounded-xl p-3 border border-dark-700">
+                                    <p class="text-dark-400 text-[11px] mb-0.5">Rede</p>
+                                    <p id="confirm-network" class="text-white text-xs font-medium"></p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-primary-500/15 to-purple-500/15 rounded-xl p-3.5 border border-primary-500/30">
+                                <p class="text-primary-300 text-[11px] mb-0.5 font-semibold">Total a Debitar</p>
+                                <p id="confirm-total" class="text-white text-xl font-extrabold font-mono"></p>
+                            </div>
+
+                            <div id="tx-warnings" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-3">
+                                <p class="text-amber-400 text-xs font-bold mb-1">Avisos:</p>
+                                <ul id="tx-warnings-list" class="text-amber-200 text-xs list-disc list-inside space-y-0.5"></ul>
+                            </div>
+                        </div>
+
+                        <!-- Checkbox -->
+                        <label class="flex items-start gap-3 cursor-pointer group">
+                            <div class="relative mt-0.5">
+                                <input type="checkbox" id="confirm-address-verified" class="sr-only peer">
+                                <div class="w-5 h-5 bg-dark-700 border border-dark-600 rounded-md peer-checked:bg-primary-500 peer-checked:border-primary-500 transition-all"></div>
+                                <svg class="w-3 h-3 text-white absolute top-1 left-1 hidden peer-checked:block" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <span class="text-xs text-dark-300 group-hover:text-dark-200 transition-colors">
+                                Eu confirmei que o endereço de destino acima está correto.
+                            </span>
+                        </label>
+
+                        <!-- Password -->
+                        <div>
+                            <label class="block text-xs font-medium text-dark-300 mb-1.5">Senha para Assinar</label>
+                            <input type="password" id="confirm-send-password"
+                                class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                                placeholder="Sua senha local" autocomplete="current-password">
+                            <p id="confirm-password-error" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                        </div>
+
+                        <button id="btn-confirm-send"
+                            class="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] disabled:hover:scale-100 flex items-center justify-center gap-2 text-sm shadow-lg shadow-red-500/20"
+                            disabled>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            Assinar e Transmitir à Blockchain
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receive Screen -->
+            <div id="receive-screen" class="hidden h-full flex flex-col">
+                <header class="p-4 flex items-center gap-3 border-b border-white/5 bg-dark-900/60">
+                    <button id="btn-back-receive"
+                        class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all text-dark-300 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 class="text-base font-semibold">Receber Cripto / Tokens</h1>
+                </header>
+
+                <div class="flex-1 p-6 flex flex-col items-center justify-center overflow-y-auto">
+                    <div class="animate-fade-in text-center w-full max-w-sm">
+                        <!-- QR Code Frame -->
+                        <div class="bg-white p-4 rounded-3xl inline-block mb-5 shadow-2xl border-4 border-primary-500/30">
+                            <div id="qr-code"></div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="bg-dark-800 rounded-2xl p-4 mb-5 border border-dark-700">
+                            <p class="text-dark-400 text-xs mb-1.5 uppercase font-semibold tracking-wider">Seu Endereço Ethereum</p>
+                            <code id="receive-address" class="text-cyan-300 text-xs break-all font-mono leading-relaxed block"></code>
+                        </div>
+
+                        <button id="btn-copy-receive-address"
+                            class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all flex items-center justify-center gap-2 transform hover:scale-[1.02] text-sm shadow-lg shadow-primary-500/25">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            Copiar Endereço
+                        </button>
+                        <p class="text-[11px] text-dark-500 mt-3">Envie apenas ETH ou tokens ERC-20 compatíveis.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Screen -->
+            <div id="settings-screen" class="hidden h-full flex flex-col">
+                <header class="p-4 flex items-center gap-3 border-b border-white/5 bg-dark-900/60">
+                    <button id="btn-back-settings"
+                        class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all text-dark-300 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 class="text-base font-semibold">Configurações & Rede</h1>
+                </header>
+
+                <div class="flex-1 p-5 overflow-y-auto space-y-4">
+                    <div class="animate-fade-in space-y-4">
+                        <!-- Network Selector -->
+                        <div class="bg-dark-850 rounded-2xl p-4 border border-dark-700">
+                            <label class="block text-xs font-semibold text-dark-300 mb-2 uppercase tracking-wider">Rede Conectada</label>
+                            <select id="network-select"
+                                class="w-full bg-dark-900 border border-dark-600 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 transition-all">
+                                <option value="mainnet">Ethereum Mainnet (Principal)</option>
+                                <option value="sepolia">Sepolia Testnet (Testes)</option>
+                                <option value="goerli">Goerli Testnet (Legado)</option>
+                            </select>
+                        </div>
+
+                        <!-- Inactivity Timeout -->
+                        <div class="bg-dark-850 rounded-2xl p-4 border border-dark-700">
+                            <label class="block text-xs font-semibold text-dark-300 mb-2 uppercase tracking-wider">Bloqueio por Inatividade</label>
+                            <select id="inactivity-timeout"
+                                class="w-full bg-dark-900 border border-dark-600 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 transition-all">
+                                <option value="60000">1 minuto (Máxima Segurança)</option>
+                                <option value="300000" selected>5 minutos (Recomendado)</option>
+                                <option value="600000">10 minutos</option>
+                                <option value="900000">15 minutos</option>
+                                <option value="1800000">30 minutos</option>
+                            </select>
+                        </div>
+
+                        <!-- RPC Health -->
+                        <div class="bg-dark-850 rounded-2xl p-4 border border-dark-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-xs font-semibold text-dark-300 uppercase tracking-wider">Endpoint RPC</label>
+                                <span id="rpc-health" class="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">Online</span>
+                            </div>
+                            <div class="bg-dark-900 rounded-xl p-2.5 border border-dark-700/80">
+                                <p id="settings-rpc-url" class="text-xs font-mono text-dark-400 break-all"></p>
+                            </div>
+                            <p class="text-[10px] text-dark-500 mt-2">Fallback automático ativo entre múltiplos nós públicos (LlamaRPC, Ankr, Cloudflare).</p>
+                        </div>
+
+                        <!-- Security Options -->
+                        <div class="bg-dark-850 rounded-2xl p-4 border border-dark-700 space-y-2.5">
+                            <h3 class="text-xs font-semibold text-dark-300 uppercase tracking-wider mb-3">Segurança do Cofre</h3>
+                            <button id="btn-export-seed"
+                                class="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 font-medium py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Revelar Seed Phrase (12 palavras)
+                            </button>
+                            <button id="btn-export-backup"
+                                class="w-full bg-primary-500/10 hover:bg-primary-500/20 text-primary-400 border border-primary-500/30 font-medium py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                </svg>
+                                Exportar Backup Criptografado (JSON)
+                            </button>
+                            <button id="btn-import-backup-settings"
+                                class="w-full bg-dark-750 hover:bg-dark-700 text-dark-300 border border-dark-600 font-medium py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Importar Arquivo de Backup
+                            </button>
+                            <button id="btn-delete-wallet"
+                                class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 font-medium py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Apagar e Limpar Carteira
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Seed Screen -->
+            <div id="export-seed-screen" class="hidden h-full flex flex-col">
+                <header class="p-4 flex items-center gap-3 border-b border-white/5 bg-dark-900/60">
+                    <button id="btn-back-export"
+                        class="w-9 h-9 rounded-xl bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all text-dark-300 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 class="text-base font-semibold">Exportar Seed Phrase</h1>
+                </header>
+
+                <div class="flex-1 p-5 overflow-y-auto">
+                    <div class="animate-fade-in space-y-4">
+                        <div class="bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-2xl p-4">
+                            <div class="flex gap-3">
+                                <div class="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-red-400 font-semibold text-sm mb-1">NUNCA COMPARTILHE!</h3>
+                                    <p class="text-red-200/80 text-xs leading-relaxed">Qualquer indivíduo com estas palavras poderá mover seus ativos permanentemente.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-dark-300 mb-1.5">Confirme sua Senha</label>
+                            <input type="password" id="export-password"
+                                class="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                                placeholder="Sua senha local" autocomplete="current-password">
+                            <p id="export-password-error" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                        </div>
+
+                        <!-- Revealed Seed -->
+                        <div id="exported-seed" class="hidden bg-dark-850 rounded-2xl p-4 border border-amber-500/30">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs text-dark-400 font-medium">Sua Seed Phrase</span>
+                                <span class="text-xs text-amber-400 flex items-center gap-1 font-mono">
+                                    Oculta em <span id="seed-countdown">30</span>s
+                                </span>
+                            </div>
+                            <div id="exported-seed-words" class="grid grid-cols-3 gap-2"></div>
+                        </div>
+
+                        <button id="btn-reveal-seed"
+                            class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-3.5 px-6 rounded-2xl transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 text-sm shadow-lg shadow-amber-500/20">
+                            Revelar Palavras Secretas
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modals -->
+
+            <!-- Transaction Success Modal -->
+            <div id="tx-success-modal"
+                class="hidden fixed inset-0 bg-dark-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                <div class="bg-dark-850 rounded-3xl p-6 max-w-sm w-full animate-scale-in border border-dark-700 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl shadow-green-500/30">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h2 class="text-lg font-bold mb-1">Transação Transmitida!</h2>
+                    <p class="text-dark-400 text-xs mb-4">A operação foi enviada para a mempool da rede.</p>
+                    <div class="bg-dark-900 rounded-xl p-3 mb-4 text-left">
+                        <p class="text-dark-400 text-[10px] mb-1 font-mono uppercase">Transaction Hash</p>
+                        <code id="tx-hash" class="text-cyan-400 text-xs break-all font-mono"></code>
+                    </div>
+                    <a id="tx-explorer-link" href="#" target="_blank" rel="noopener noreferrer"
+                        class="text-primary-400 hover:text-primary-300 text-xs font-semibold flex items-center justify-center gap-1 mb-5 transition-colors">
+                        Ver no Etherscan Explorer
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
+                    <button id="btn-close-tx-modal"
+                        class="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3 px-6 rounded-xl transition-all text-xs">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Delete Modal -->
+            <div id="delete-modal"
+                class="hidden fixed inset-0 bg-dark-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                <div class="bg-dark-850 rounded-3xl p-6 max-w-sm w-full animate-scale-in border border-dark-700 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl shadow-red-500/30">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-lg font-bold mb-1 text-red-400">Apagar Carteira?</h2>
+                    <p class="text-dark-400 text-xs mb-4">Esta ação apagará as chaves deste navegador. Certifique-se de possuir a seed phrase anotada.</p>
+                    <div class="mb-4">
+                        <input type="text" id="delete-confirm-text"
+                            class="w-full bg-dark-900 border border-dark-600 rounded-xl px-4 py-2.5 text-white text-center text-xs focus:outline-none focus:border-red-500 transition-all font-mono"
+                            placeholder="Digite APAGAR para confirmar" autocomplete="off">
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btn-cancel-delete"
+                            class="flex-1 bg-dark-700 hover:bg-dark-600 text-white font-semibold py-2.5 px-4 rounded-xl transition-all text-xs">
+                            Cancelar
+                        </button>
+                        <button id="btn-confirm-delete"
+                            class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-4 rounded-xl transition-all disabled:opacity-50 text-xs"
+                            disabled>
+                            Apagar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Token Selector Modal -->
+            <div id="token-selector-modal"
+                class="hidden fixed inset-0 bg-dark-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                <div class="bg-dark-850 rounded-3xl max-w-sm w-full animate-scale-in border border-dark-700 max-h-[80vh] flex flex-col">
+                    <div class="p-4 border-b border-dark-700">
+                        <div class="flex items-center justify-between mb-3">
+                            <h2 class="text-sm font-bold">Selecionar Token</h2>
+                            <button id="btn-close-token-modal"
+                                class="w-7 h-7 rounded-lg bg-dark-700 hover:bg-dark-600 flex items-center justify-center transition-all text-dark-300 hover:text-white">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <input type="text" id="token-search"
+                            class="w-full bg-dark-900 border border-dark-600 rounded-xl px-4 py-2.5 text-white text-xs focus:outline-none focus:border-primary-500 transition-all"
+                            placeholder="Buscar token por nome ou símbolo..." autocomplete="off">
+                    </div>
+                    <div id="token-modal-list" class="flex-1 overflow-y-auto divide-y divide-dark-700/60 p-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Status Bar -->
+        <footer class="p-3 border-t border-white/5 bg-dark-900/90 backdrop-blur-md flex items-center justify-between z-20 text-[11px] text-dark-400">
+            <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                <span class="font-medium text-dark-300">SecureON v2.0</span>
+            </div>
+
+            <!-- RPC Status -->
+            <div id="rpc-status" class="hidden flex items-center gap-1.5 text-[10px] text-dark-400 bg-dark-800/80 px-2.5 py-1 rounded-lg border border-dark-700">
+                <div class="w-1.5 h-1.5 bg-primary-400 rounded-full"></div>
+                <span id="rpc-endpoint" class="font-mono text-dark-300"></span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="https://www.paypal.com/ncp/payment/L7YRCS984T33N" target="_blank" class="text-amber-400 hover:text-amber-300 font-semibold transition-colors">
+                    Apoiar
+                </a>
+                <a href="tutorial.html" target="_blank" class="text-primary-400 hover:text-primary-300 font-semibold transition-colors flex items-center gap-0.5">
+                    Guia
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="fixed bottom-16 right-4 z-[100] space-y-2 max-w-sm"></div>
+
+    <!-- Core Scripts (Ordered) -->
+    <script src="ethers.js"></script>
+    <script src="qrcode.js"></script>
+    <script src="common.js"></script>
+    <script src="security.js"></script>
+    <script src="crypto.js"></script>
+    <script src="storage.js"></script>
+    <script src="tokens.js"></script>
+    <script src="blockchain.js"></script>
+    <script src="app.js"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js?v=2.0.0')
+                    .then(reg => console.log('SecureON SW registered:', reg.scope))
+                    .catch(err => console.log('SecureON SW failed:', err));
+            });
+        }
+    </script>
+</body>
+
+</html>

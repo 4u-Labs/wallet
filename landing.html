@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureON Wallet | Sua Soberania Digital</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="tailwind_compiled.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #6366f1; 
+            --accent: #06b6d4; 
+            --dark-bg: #020617;
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: var(--dark-bg); 
+            color: #ffffff; 
+            overflow-x: hidden; 
+        }
+        
+        /* Animated Background Mesh */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(167, 139, 250, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            filter: blur(80px);
+            animation: pulseBg 15s ease infinite alternate;
+        }
+
+        @keyframes pulseBg {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .glass { 
+            background: rgba(15, 23, 42, 0.4); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid var(--glass-border); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .glass-hover:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(99, 102, 241, 0.05);
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.1);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .premium-btn {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .premium-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+
+        .premium-btn:hover::after {
+            transform: scale(1);
+        }
+
+        .animate-float {
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+            50% { transform: translateY(-20px) scale(1.02) rotate(1deg); }
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+        }
+        .nav-link + .nav-link {
+            margin-left: 2.5rem;
+        }
+        .footer-link + .footer-link {
+            margin-left: 3rem;
+        }
+        @media (max-width: 768px) {
+            .nav-link + .nav-link, .footer-link + .footer-link {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen selection:bg-indigo-500/30">
+    <div class="mesh-bg"></div>
+
+    <nav class="container mx-auto px-6 py-8 flex justify-between items-center relative z-20">
+        <div class="flex items-center gap-4 group cursor-pointer">
+            <div class="relative">
+                <div class="absolute -inset-2 bg-indigo-500/40 blur-lg rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <img src="icons/icon128.png" alt="Logo" class="relative w-12 h-12 rounded-xl border border-white/10">
+            </div>
+            <span class="text-2xl font-bold tracking-tight">SecureON <span class="text-indigo-400">Wallet</span></span>
+        </div>
+        <div class="hidden md:flex text-sm font-semibold text-slate-400 uppercase tracking-widest items-center">
+            <a href="#features" class="nav-link hover:text-white transition-all hover:glow-text">Recursos</a>
+            <a href="suporte.html" class="nav-link hover:text-white transition-all hover:glow-text">Suporte</a>
+            <a href="privacidade.html" class="nav-link hover:text-white transition-all hover:glow-text">Privacidade</a>
+        </div>
+        <a href="index.html" class="hidden lg:block px-6 py-2.5 glass rounded-full text-xs font-bold hover:bg-white/5 transition-all border-indigo-500/30 text-indigo-300">
+            ABRIR CARTEIRA
+        </a>
+    </nav>
+
+    <main class="container mx-auto px-6 pt-16 pb-40 flex flex-col lg:flex-row items-center gap-20 relative z-10">
+        <div class="flex-1 text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-indigo-500/30 text-indigo-300 text-xs font-bold mb-10 tracking-[0.2em] uppercase">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                Web3 Ready • Zero-Knowledge
+            </div>
+            <h1 class="text-6xl md:text-[5.5rem] font-bold mb-10 leading-[1] tracking-tight">
+                Suas chaves.<br>
+                <span class="text-slate-400/60">Suas moedas.</span><br>
+                <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent glow-text">Sua Liberdade.</span>
+            </h1>
+            <p class="text-xl text-slate-400 mb-14 max-w-xl leading-relaxed mx-auto lg:mx-0">
+                A SecureON Wallet é a ponte definitiva para o futuro descentralizado. Segurança militar, interface intuitiva e total soberania sobre seus ativos.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-8 justify-center lg:justify-start">
+                <a href="index.html" class="premium-btn px-12 py-5 rounded-2xl font-bold shadow-2xl shadow-indigo-500/30 flex items-center justify-center gap-4 text-lg">
+                    Acessar Carteira
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </a>
+                <div class="flex items-center gap-4 px-6 py-5 glass rounded-2xl">
+                    <div class="flex -space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500 border-2 border-dark-bg flex items-center justify-center text-[10px] font-bold">ETH</div>
+                        <div class="w-8 h-8 rounded-full bg-cyan-500 border-2 border-dark-bg flex items-center justify-center text-[10px] font-bold">POL</div>
+                        <div class="w-8 h-8 rounded-full bg-purple-500 border-2 border-dark-bg flex items-center justify-center text-[10px] font-bold">BNB</div>
+                    </div>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Multi-Chain Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 relative">
+            <div class="absolute -inset-40 bg-indigo-500/10 blur-[120px] rounded-full"></div>
+            <div class="relative animate-float">
+                <div class="absolute -top-10 -left-10 w-32 h-32 bg-cyan-500/20 blur-3xl rounded-full"></div>
+                <img src="banner.png" alt="SecureON Interface" class="w-full max-w-3xl mx-auto rounded-[3.5rem] shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-white/5">
+                <!-- Floating Card Detail -->
+                <div class="absolute -bottom-10 -right-5 glass p-6 rounded-3xl animate-bounce shadow-2xl border-white/20">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase">Status</p>
+                            <p class="text-sm font-bold text-white">Vault Protected</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="section-divider"></div>
+
+    <section id="features" class="container mx-auto px-6 py-40">
+        <div class="text-center mb-24">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Poder sem limites.</h2>
+            <p class="text-slate-400 max-w-2xl mx-auto">Tudo o que você precisa para dominar a Web3, em uma interface que parece vir do futuro.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-10">
+            <div class="glass glass-hover p-12 rounded-[3rem] transition-all group">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500/20 to-indigo-500/5 rounded-2xl flex items-center justify-center mb-10 group-hover:rotate-12 transition-transform">
+                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-6">Segurança Militar</h3>
+                <p class="text-slate-400 leading-relaxed">Criptografia AES-256 local. Seus dados nunca tocam a nuvem. Soberania absoluta.</p>
+            </div>
+            <div class="glass glass-hover p-12 rounded-[3rem] transition-all group">
+                <div class="w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 rounded-2xl flex items-center justify-center mb-10 group-hover:rotate-12 transition-transform">
+                    <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-6">Velocidade Warp</h3>
+                <p class="text-slate-400 leading-relaxed">Confirmação de transações em milissegundos com rotas otimizadas de gas.</p>
+            </div>
+            <div class="glass glass-hover p-12 rounded-[3rem] transition-all group">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-purple-500/5 rounded-2xl flex items-center justify-center mb-10 group-hover:rotate-12 transition-transform">
+                    <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-6">Privacidade Total</h3>
+                <p class="text-slate-400 leading-relaxed">Zero logs, zero rastreamento. Você é invisível para terceiros, mas estável na rede.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="container mx-auto px-6 py-24 text-center border-t border-white/5 relative z-10">
+        <div class="flex flex-wrap justify-center mb-10 text-sm font-bold text-slate-500 uppercase tracking-[0.2em] gap-6">
+            <a href="privacidade.html" class="hover:text-indigo-400 transition-all hover:glow-text">Privacidade</a>
+            <a href="termos.html" class="hover:text-indigo-400 transition-all hover:glow-text">Termos</a>
+            <a href="suporte.html" class="hover:text-indigo-400 transition-all hover:glow-text">Suporte</a>
+            <a href="tutorial.html" class="hover:text-indigo-400 transition-all hover:glow-text">Tutorial</a>
+            <a href="https://github.com/4u-Labs/wallet" target="_blank" class="hover:text-indigo-400 transition-all hover:glow-text">GitHub</a>
+            <a href="https://www.paypal.com/ncp/payment/L7YRCS984T33N" target="_blank" class="hover:text-amber-400 transition-all">Apoiar Projeto</a>
+        </div>
+        <p class="text-slate-600 text-[11px] font-medium tracking-[0.2em] uppercase">&copy; 2026 4U.IA.BR • SECUREON WALLET • DIGITAL SOVEREIGNTY</p>
+    </footer>
+
+    <script src="common.js"></script>
+</body>
+</html>

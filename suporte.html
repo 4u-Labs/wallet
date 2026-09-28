@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suporte & FAQ — SecureON Wallet 4U.IA.BR</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #06b6d4;
+            --bg-dark: #080b14;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            display: block;
+            overflow-y: auto;
+            background: var(--bg-dark);
+            color: #f1f5f9;
+            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .support-container {
+            max-width: 860px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .back-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.8; }
+        h1 { color: #fff; margin-bottom: 8px; font-weight: 800; font-size: 2.2rem; }
+        .subtitle { color: #94a3b8; font-size: 1rem; margin-bottom: 24px; }
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .search-box input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 14px 20px 14px 44px;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+        }
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+        .faq-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 16px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .faq-card:hover {
+            border-color: rgba(99, 102, 241, 0.35);
+            transform: translateY(-2px);
+        }
+        .faq-question {
+            color: var(--accent);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .faq-answer {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .faq-answer code {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
+        }
+        .highlight {
+            color: #10b981;
+            font-weight: 600;
+        }
+        .contact-card {
+            margin-top: 36px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+        }
+        .contact-card h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .contact-card p {
+            color: #94a3b8;
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+        }
+        .btn-contact {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-contact:hover {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+        .footer-note {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="support-container">
+        <div class="header-nav">
+            <a href="index.html" class="back-link">
+                ← Voltar ao SecureON
+            </a>
+            <span style="font-size: 0.85rem; color: #64748b;">4U.IA.BR • Suporte Cripto</span>
+        </div>
+
+        <div>
+            <h1>Central de Ajuda SecureON</h1>
+            <p class="subtitle">Perguntas frequentes e orientações técnicas sobre a carteira Ethereum não-custodial.</p>
+
+            <div class="search-box">
+                <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" id="faqSearch" placeholder="Pesquisar dúvidas sobre carteira, tokens ou envio...">
+            </div>
+
+            <div id="faqList">
+                <div class="faq-card">
+                    <h3 class="faq-question">O que acontece se eu esquecer minha senha?</h3>
+                    <div class="faq-answer">
+                        Se você esquecer a senha local da carteira, poderá recuperá-la integralmente desde que tenha a sua <span class="highlight">Seed Phrase de 12 palavras</span>. Basta selecionar "Importar Carteira (Seed)", digitar suas 12 palavras e definir uma nova senha de criptografia. Se você não possuir nem a senha e nem a Seed Phrase, os ativos tornam-se irrecuperáveis devido à criptografia de ponta a ponta.
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <h3 class="faq-question">Como funciona a troca de rede (Mainnet / Sepolia)?</h3>
+                    <div class="faq-answer">
+                        Nas <strong>Configurações</strong> do SecureON, você pode alternar facilmente entre a rede principal <code>Ethereum Mainnet</code> e a rede de testes <code>Sepolia Testnet</code>. Cada rede possui múltiplos nós RPC públicos configurados com <strong>fallback automático</strong> para garantir alta disponibilidade.
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <h3 class="faq-question">Como adicionar tokens ERC-20 personalizados?</h3>
+                    <div class="faq-answer">
+                        Por padrão, o SecureON já suporta os principais tokens (USDT, USDC, DAI, WBTC, LINK, UNI). Para adicionar qualquer outro token, acesse a aba de Tokens, clique em "Adicionar Token" e insira o endereço de contrato oficial do token. O SecureON consulta a blockchain e carrega automaticamente o símbolo e as casas decimais.
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <h3 class="faq-question">Minhas chaves privadas estão seguras?</h3>
+                    <div class="faq-answer">
+                        Sim! Suas chaves são cifradas com <strong>AES-256-GCM</strong> utilizando derivação <strong>PBKDF2 com 100.000 iterações</strong>. A chave pura só reside momentaneamente na memória volátil durante a assinatura de uma transação e é limpa imediatamente por rotinas de sanitização de memória.
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <h3 class="faq-question">O que é a limpeza automática de área de transferência?</h3>
+                    <div class="faq-answer">
+                        Ao clicar em "Copiar Endereço" ou visualizar dados sensíveis, o SecureON ativa um cronômetro de segurança de <strong>30 segundos</strong>. Decorrido esse tempo, o valor na sua área de transferência é apagado para impedir ataques de malwares espiões (clipboard hijackers).
+                    </div>
+                </div>
+            </div>
+
+            <div id="noResults" style="display:none; text-align:center; padding: 40px; color:#64748b;">
+                Nenhuma resposta encontrada para sua pesquisa.
+            </div>
+
+            <div class="contact-card">
+                <h3>Precisa de suporte ou reportar um problema?</h3>
+                <p>O SecureON é um projeto de código aberto mantido pela comunidade 4U-Labs.</p>
+                <a href="https://github.com/4u-Labs/wallet/issues" target="_blank" class="btn-contact">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    Abrir Chamado no GitHub
+                </a>
+            </div>
+
+            <div class="footer-note">
+                &copy; 2026 4U.IA.BR • SecureON Wallet • Todos os direitos reservados.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('faqSearch');
+        const faqCards = document.querySelectorAll('.faq-card');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            let found = 0;
+
+            faqCards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    card.style.display = 'block';
+                    found++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            noResults.style.display = found === 0 ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

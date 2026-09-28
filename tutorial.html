@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Master - SecureON Wallet</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #a855f7;
+            --accent: #ec4899;
+            --dark-950: #020617;
+            --dark-900: #0f172a;
+            --dark-800: #1e293b;
+            --dark-700: #334155;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-950);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('wallet_tutorial_hero_1778628493496.png');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.4) saturate(1.2);
+            z-index: -2;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent, var(--dark-950));
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #fff, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Grid Layout */
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (min-width: 992px) {
+            .tutorial-grid {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        /* Sidebar Nav */
+        .sidebar {
+            position: sticky;
+            top: 40px;
+            height: fit-content;
+        }
+
+        .nav-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+        }
+
+        .nav-card h3 {
+            font-size: 14px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-dim);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Content Sections */
+        .content {
+            padding-bottom: 100px;
+        }
+
+        .section-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 48px;
+            margin-bottom: 48px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .section-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .section-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .section-icon svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+
+        .section-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .section-card p {
+            color: var(--text-dim);
+            font-size: 17px;
+            margin-bottom: 32px;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .feature-box h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-box h4 svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+
+        .feature-box p {
+            font-size: 14px;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        /* Warning Card */
+        .warning-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.1));
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 24px;
+            padding: 32px;
+            margin: 32px 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        .warning-icon {
+            width: 48px;
+            height: 48px;
+            background: #ef4444;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .warning-text h4 {
+            color: #ef4444;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .warning-text p {
+            color: #fca5a5;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        /* FAQ Accordion */
+        .faq-item {
+            border-bottom: 1px solid var(--glass-border);
+            padding: 24px 0;
+        }
+
+        .faq-question {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--primary);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            color: var(--text-dim);
+            font-size: 15px;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            margin-top: 16px;
+        }
+
+        .faq-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 0;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--dark-700);
+            font-size: 12px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Step Timeline */
+        .steps {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .step-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .step-dot {
+            position: absolute;
+            left: -32px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            background: var(--dark-950);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .step-item h4 {
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .step-item p {
+            font-size: 15px;
+        }
+
+        .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                Web3 Survival Guide
+            </div>
+            <h1>A Fortaleza do seu <br>Patrimônio Digital</h1>
+            <p>Aprenda a operar a Secureon com segurança máxima e domine os conceitos fundamentais da custódia descentralizada.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="tutorial-grid">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <div class="nav-card">
+                    <h3>Guia de Navegação</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#quickstart" class="nav-link active">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                Início Rápido
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#security" class="nav-link">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                Segurança Zero
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#backup" class="nav-link">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                                Backups e Recovery
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#networks" class="nav-link">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                                Redes e Gas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#faq" class="nav-link">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Central de Dúvidas
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="content">
+                
+                <!-- Início Rápido -->
+                <section id="quickstart" class="section-card">
+                    <div class="section-title">
+                        <div class="section-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <h2>Início Rápido</h2>
+                    </div>
+                    <p>Siga estes 4 passos cruciais para começar sua jornada com total tranquilidade.</p>
+                    
+                    <div class="steps">
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4>Criação da Carteira</h4>
+                            <p>Ao iniciar, você receberá 12 palavras aleatórias. Esta é sua Seed Phrase. Anote-as imediatamente em papel físico.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4>Definição de Senha</h4>
+                            <p>Crie uma senha forte de pelo menos 12 caracteres. Ela será usada para desbloquear sua carteira no dia a dia.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4>Verificação de Backup</h4>
+                            <p>Exporte seu arquivo JSON de backup e guarde em um pendrive seguro. Teste a importação se puder.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4>Recebimento de Fundos</h4>
+                            <p>Copie seu endereço público e envie uma pequena quantia de teste (ex: 0.01 ETH) antes de enviar valores altos.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Segurança Zero -->
+                <section id="security" class="section-card">
+                    <div class="section-title">
+                        <div class="section-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        </div>
+                        <h2>Segurança Nível Zero</h2>
+                    </div>
+                    <p>No mundo Web3, você é seu próprio banco. Não há suporte para resetar senhas ou estornar transações.</p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-box">
+                            <h4><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg> Seed Phrase</h4>
+                            <p>Nunca, sob hipótese alguma, digite suas 12 palavras em sites desconhecidos ou envie para "suporte técnico".</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4><svg fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg> Phishing</h4>
+                            <p>Sempre verifique a URL da aplicação que você está conectando. Golpistas criam sites idênticos para roubar fundos.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Cold Storage</h4>
+                            <p>Para grandes quantias, considere usar uma Hardware Wallet (Ledger/Trezor) em conjunto com a Secureon.</p>
+                        </div>
+                    </div>
+
+                    <div class="warning-card">
+                        <div class="warning-icon">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        </div>
+                        <div class="warning-text">
+                            <h4>Alerta Crítico de Senha</h4>
+                            <p>Diferente de bancos tradicionais, a Secureon não tem um banco de dados central. Se você perder sua senha E sua Seed Phrase, seus fundos estarão perdidos permanentemente.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Backups -->
+                <section id="backup" class="section-card">
+                    <div class="section-title">
+                        <div class="section-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                        </div>
+                        <h2>Backups e Recovery</h2>
+                    </div>
+                    <p>Mantenha sempre duas formas de acesso à sua conta.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-box">
+                            <div class="badge-grid"><span class="badge">Essencial</span></div>
+                            <h4>Seed Phrase (Palavras)</h4>
+                            <p>O método universal. Funciona em qualquer carteira Ethereum do mundo. É a sua garantia final de propriedade.</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="badge-grid"><span class="badge">Conveniente</span></div>
+                            <h4>Arquivo JSON</h4>
+                            <p>Um arquivo criptografado que contém suas chaves. Rápido de importar, mas exige a senha original para desbloquear.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Redes e Gas -->
+                <section id="networks" class="section-card">
+                    <div class="section-title">
+                        <div class="section-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                        </div>
+                        <h2>Redes e Gas</h2>
+                    </div>
+                    <p>Entenda como funcionam os custos de transação na blockchain.</p>
+                    
+                    <div class="feature-box" style="margin-bottom: 24px;">
+                        <h4>O que é Gas?</h4>
+                        <p>Gas é a unidade de medida do esforço computacional necessário para executar operações na rede Ethereum. Você paga esse "combustível" em ETH.</p>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="feature-box">
+                            <h4>Mainnet</h4>
+                            <p>A rede principal onde o dinheiro real circula. As taxas costumam ser mais altas dependendo do congestionamento.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4>Testnets (Sepolia)</h4>
+                            <p>Redes de teste para desenvolvedores. Use para praticar sem gastar dinheiro real.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FAQ -->
+                <section id="faq" class="section-card">
+                    <div class="section-title">
+                        <div class="section-icon" style="background: linear-gradient(135deg, #475569, #1e293b);">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <h2>Perguntas Frequentes</h2>
+                    </div>
+
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                Posso usar a mesma conta em dois computadores?
+                                <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            </button>
+                            <div class="faq-answer">
+                                Sim! Basta importar sua Seed Phrase ou o arquivo JSON no outro computador. Os fundos estão na blockchain, não "dentro" do computador.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                O que acontece se eu apagar a extensão?
+                                <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            </button>
+                            <div class="faq-answer">
+                                Seus dados locais (senha e chaves criptografadas) serão removidos do navegador. No entanto, seus fundos continuam salvos na blockchain. Você poderá restaurar tudo usando suas 12 palavras.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                Por que minha transação está demorando?
+                                <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            </button>
+                            <div class="faq-answer">
+                                Provavelmente porque o preço do gas subiu após você enviar a transação. A rede prioriza quem paga mais. Você pode aguardar ou tentar "acelerar" a transação (em versões futuras).
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                Posso cancelar uma transação?
+                                <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            </button>
+                            <div class="faq-answer">
+                                Transações em blockchain são irreversíveis. Uma vez confirmada, não há volta. Sempre confira o endereço de destino triplamente.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <span class="footer-logo">SECUREON</span>
+            <div class="footer-links">
+                <a href="privacidade.html">Privacidade</a>
+                <a href="termos.html">Termos</a>
+                <a href="suporte.html">Suporte</a>
+                <a href="index.html">Carteira</a>
+                <a href="https://github.com/4u-Labs/wallet" target="_blank">GitHub</a>
+                <a href="https://www.paypal.com/ncp/payment/L7YRCS984T33N" target="_blank" style="color: #fbbf24;">Apoiar</a>
+            </div>
+            <p class="copyright">© 2026 4U.IA.BR • SecureON Wallet • Non-custodial technology.</p>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+
+        // Sidebar Navigation
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
