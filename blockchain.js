@@ -13,9 +13,9 @@ const BlockchainModule = (function() {
             name: 'Ethereum Mainnet',
             chainId: 1,
             rpcUrls: [
-                'https://eth.llamarpc.com',
-                'https://rpc.ankr.com/eth',
-                'https://cloudflare-eth.com'
+                'https://cloudflare-eth.com',
+                'https://ethereum-rpc.publicnode.com',
+                'https://1rpc.io/eth'
             ],
             explorer: 'https://etherscan.io',
             explorerApi: 'https://api.etherscan.io',

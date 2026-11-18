@@ -51,7 +51,7 @@ self.addEventListener('fetch', (event) => {
 
     // Ignore RPC network calls (they must go directly to the blockchain)
     const url = event.request.url;
-    if (url.includes('llamarpc.com') || url.includes('ankr.com') || url.includes('cloudflare-eth.com') || url.includes('etherscan.io') || url.includes('sepolia')) {
+    if (url.includes('publicnode.com') || url.includes('1rpc.io') || url.includes('ankr.com') || url.includes('cloudflare-eth.com') || url.includes('etherscan.io') || url.includes('sepolia')) {
         return;
     }
 
