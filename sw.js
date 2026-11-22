@@ -1,75 +1,44 @@
-const CACHE_NAME = 'secureon-wallet-v2.1.0';
-const ASSETS = [
-    './',
-    './index.html',
-    './landing.html',
-    './tutorial.html',
-    './termos.html',
-    './privacidade.html',
-    './suporte.html',
-    './manifest.json',
-    './favicon.svg',
-    './favicon-32x32.png',
-    './icon-192.png',
-    './icon-512.png',
-    './tailwind_compiled.css',
-    './style.css',
-    './ethers.js',
-    './qrcode.js',
-    './common.js',
-    './security.js',
-    './crypto.js',
-    './storage.js',
-    './tokens.js',
-    './blockchain.js',
-    './app.js'
-];
+const CACHE_NAME = '4ulabs-wallet-v3';
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS).catch(err => {
-                console.warn('Pre-cache partial warning:', err);
-            });
-        }).then(() => self.skipWaiting())
+        caches.keys()
+            .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+            .then(() => self.clients.claim())
     );
 });
 
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((keys) => {
-            return Promise.all(
-                keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-            );
-        }).then(() => self.clients.claim())
-    );
-});
+self.addEventListener('fetch', event => {
+    const req = event.request;
+    if (req.method !== 'GET') return;
+    const url = new URL(req.url);
+    if (url.origin !== self.location.origin || url.pathname.includes('/api/')) return;
 
-self.addEventListener('fetch', (event) => {
-    // Only handle GET requests
-    if (event.request.method !== 'GET') return;
-
-    // Ignore RPC network calls (they must go directly to the blockchain)
-    const url = event.request.url;
-    if (url.includes('publicnode.com') || url.includes('1rpc.io') || url.includes('ankr.com') || url.includes('cloudflare-eth.com') || url.includes('etherscan.io') || url.includes('sepolia')) {
+    // Network-first for HTML/PHP/navigations so updates always load immediately
+    if (req.mode === 'navigate' || url.pathname.endsWith('.php') || url.pathname.endsWith('.html') || url.pathname.endsWith('/')) {
+        event.respondWith(
+            fetch(req).then(res => {
+                if (res && res.ok) {
+                    const copy = res.clone();
+                    caches.open(CACHE_NAME).then(c => c.put(req, copy));
+                }
+                return res;
+            }).catch(() => caches.match(req))
+        );
         return;
     }
 
     event.respondWith(
-        fetch(event.request)
-            .then((networkResponse) => {
-                // If good response and same origin, cache it
-                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-                    const responseToCache = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseToCache);
-                    });
-                }
-                return networkResponse;
-            })
-            .catch(() => {
-                // If offline, return cached version
-                return caches.match(event.request);
-            })
+        caches.match(req).then(cached => cached || fetch(req).then(res => {
+            if (res && res.ok) {
+                const copy = res.clone();
+                caches.open(CACHE_NAME).then(c => c.put(req, copy));
+            }
+            return res;
+        }))
     );
 });
